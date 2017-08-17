@@ -11,7 +11,7 @@
 #undef main
 using namespace std;
 
-int main() {
+int main( int argc, char *argv[] ) {
 	SDL_Init(SDL_INIT_VIDEO);
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;
