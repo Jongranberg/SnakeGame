@@ -43,8 +43,8 @@ public:
 		origin_x = 0;
 		origin_y = 0;
 
-		rect.x = x - origin_x;
-		rect.y = y - origin_y;
+		rect.x = x;
+		rect.y = y;
 	}
 
 	void update(){
@@ -150,26 +150,12 @@ int WinMain( int argc, char* args[] )
     	     << SDL_GetError();
     }
 
-    SDL_Surface *screen = SDL_GetWindowSurface( window );
-    Uint32 brown = SDL_MapRGB( screen->format, 230, 220, 210 );
-    Uint32 red = SDL_MapRGB( screen->format, 255, 0, 0 );
-    Uint32 blue = SDL_MapRGB( screen->format, 0, 0, 255 );
-    SDL_FillRect( screen, NULL, brown );
-
-    Sprite square( red, window_width/2 , window_height/2 );
-    Sprite anotherSquare( blue, window_width/2 -100 , window_height/2+20 );
-
-    SpriteGroup active_sprites;
-    active_sprites.add( &square );
-    active_sprites.add( &anotherSquare );
-    active_sprites.draw( screen );
-
-    SDL_UpdateWindowSurface( window );
 
     Uint32 starting_tick;
     SDL_Event event;
     bool running = true;
 
+    int i = 0;
     while (running){
 
     	starting_tick = SDL_GetTicks();
@@ -185,9 +171,26 @@ int WinMain( int argc, char* args[] )
     			break;
     		}
     	}
+    	i++;
+    SDL_Surface *screen = SDL_GetWindowSurface( window );
+    Uint32 brown = SDL_MapRGB( screen->format, 230, 220, 210 );
+    Uint32 red = SDL_MapRGB( screen->format, 255, 0, 0 );
+    Uint32 blue = SDL_MapRGB( screen->format, 0, 0, 255 );
+    SDL_FillRect( screen, NULL, brown );
+
+    Sprite square( red, window_width/2 , window_height/2 +i );
+    Sprite anotherSquare( blue, window_width/2 -i , window_height/2+20 );
+
+    SpriteGroup active_sprites;
+    active_sprites.add( &square );
+    active_sprites.add( &anotherSquare );
+    active_sprites.draw( screen );
+
+    SDL_UpdateWindowSurface( window );
+    	cout << "x = " << i << endl;
     	cap_framrate( starting_tick );
     	SDL_GetWindowPosition( window, &x , &y );
-    	cout << x << "," << y << endl;
+//    	cout << x << "," << y << endl;
     }
 
     SDL_DestroyWindow( window );
