@@ -20,6 +20,8 @@ using namespace std;
  * #undef main
  */
 using namespace std;
+void move( SDL_Window *window, int dir);
+int direction( SDL_Event event );
 
 void cap_framrate( Uint32 starting_tick ){
     	if ( ( 1000 / fps ) > SDL_GetTicks() - starting_tick  ){
@@ -130,54 +132,75 @@ public:
 		return sprites;
 	}
 };
-void startGame( SDL_Window *window ){
-	SDL_Surface *screen = SDL_GetWindowSurface( window );
 
-	Uint32 brown = SDL_MapRGB( screen->format, 230, 220, 210 );
-    Uint32 red = SDL_MapRGB( screen->format, 255, 0, 0 );
-    Uint32 blue = SDL_MapRGB( screen->format, 0, 0, 255 );
-
-    Uint32 starting_tick;
-    SDL_Event event;
-    int dir_y, dir_x = 0;
-    bool running = true;
-    while (running){
-
-    	starting_tick = SDL_GetTicks();
-    	while (SDL_PollEvent(&event)){
-    		switch( event.type ){
-    		case SDL_QUIT:
-    			running = false;
-    			break;
-    		case SDL_KEYDOWN:
-    			if ( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ){
-    				running = false;
-    			}
-    			if ( event.key.keysym.scancode == SDL_SCANCODE_UP ){
-    				dir_y--;
-    			}
-    			if ( event.key.keysym.scancode == SDL_SCANCODE_DOWN ){
-    				dir_y++;
-    			}
-    			if ( event.key.keysym.scancode == SDL_SCANCODE_LEFT ){
-    				dir_x--;
-    			}
-    			if ( event.key.keysym.scancode == SDL_SCANCODE_RIGHT ){
-    				dir_x++;
-    			}
-    			break;
+int direction( SDL_Event event ){
+	cout << "in dirrection method" << endl;
+    int dir;
+    	switch( event.type ){
+    	case SDL_QUIT:
+    		break;
+    	case SDL_KEYDOWN:
+    		if ( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ){
     		}
+    		if ( event.key.keysym.scancode == SDL_SCANCODE_UP ){
+    			dir = 0;
+    		}
+    		if ( event.key.keysym.scancode == SDL_SCANCODE_DOWN ){
+    			dir = 1;
+    		}
+    		if ( event.key.keysym.scancode == SDL_SCANCODE_LEFT ){
+    			dir = 2;
+    		}
+    		if ( event.key.keysym.scancode == SDL_SCANCODE_RIGHT ){
+    			dir = 3;
+    		}
+    		break;
     	}
-
-    SDL_FillRect( screen, NULL, brown );
-    Sprite square( red, window_width/2 + dir_x, window_height/2 + dir_y);
-    SpriteGroup active_sprites;
-    active_sprites.add( &square );
-    cap_framrate( starting_tick );
-    active_sprites.draw( screen );
-    SDL_UpdateWindowSurface( window );
-    }
+    	return dir;
 }
+void move( SDL_Window *window ){
+	SDL_Event event;
+	SDL_Surface *screen = SDL_GetWindowSurface( window );
+	Uint32 brown = SDL_MapRGB( screen->format, 230, 220, 210 );
+	Uint32 red = SDL_MapRGB( screen->format, 255, 0, 0 );
+	Uint32 blue = SDL_MapRGB( screen->format, 0, 0, 255 );
+	Uint32 starting_tick;
+
+	int dir = 4; // 4 to not start with a direction, block wont move right away
+	int dir_x, dir_y;
+	bool running = true;
+	while ( running ){
+		while ( SDL_PollEvent( &event ) ){
+			cout << "in move method" << endl;
+			cout << "dir_x = " << dir_x << " dir_y = " << dir_y << " dir = " << dir << endl;
+			if (event.type == SDL_KEYDOWN){
+				cout << "in key down if statement" << endl;
+				dir = direction( event );
+			}
+		}
+			if (dir == 0){
+				dir_y--;
+			}
+			if (dir == 1){
+				dir_y++;
+			}
+			if (dir == 2){
+				dir_x--;
+			}
+			if (dir == 3){
+				dir_x++;
+			}
+			starting_tick = SDL_GetTicks();
+			cap_framrate( starting_tick );
+			SDL_FillRect( screen, NULL, brown );
+			Sprite square( red, window_width/2 + dir_x, window_height/2 + dir_y);
+			SpriteGroup active_sprites;
+			active_sprites.add( &square );
+			active_sprites.draw( screen );
+			SDL_UpdateWindowSurface( window );
+	}
+}
+
 
 int WinMain( int argc, char* args[] )
 {
@@ -197,10 +220,8 @@ int WinMain( int argc, char* args[] )
     	cout << "could not pressent window" << endl
     	     << SDL_GetError();
     }
-
-    startGame( window );
+    move( window );
     SDL_DestroyWindow( window );
     SDL_Quit();
     return 0;
-
     }
