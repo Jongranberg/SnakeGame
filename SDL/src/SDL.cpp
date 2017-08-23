@@ -130,6 +130,54 @@ public:
 		return sprites;
 	}
 };
+void startGame( SDL_Window *window ){
+	SDL_Surface *screen = SDL_GetWindowSurface( window );
+
+	Uint32 brown = SDL_MapRGB( screen->format, 230, 220, 210 );
+    Uint32 red = SDL_MapRGB( screen->format, 255, 0, 0 );
+    Uint32 blue = SDL_MapRGB( screen->format, 0, 0, 255 );
+
+    Uint32 starting_tick;
+    SDL_Event event;
+    int dir_y, dir_x = 0;
+    bool running = true;
+    while (running){
+
+    	starting_tick = SDL_GetTicks();
+    	while (SDL_PollEvent(&event)){
+    		switch( event.type ){
+    		case SDL_QUIT:
+    			running = false;
+    			break;
+    		case SDL_KEYDOWN:
+    			if ( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ){
+    				running = false;
+    			}
+    			if ( event.key.keysym.scancode == SDL_SCANCODE_UP ){
+    				dir_y--;
+    			}
+    			if ( event.key.keysym.scancode == SDL_SCANCODE_DOWN ){
+    				dir_y++;
+    			}
+    			if ( event.key.keysym.scancode == SDL_SCANCODE_LEFT ){
+    				dir_x--;
+    			}
+    			if ( event.key.keysym.scancode == SDL_SCANCODE_RIGHT ){
+    				dir_x++;
+    			}
+    			break;
+    		}
+    	}
+
+    SDL_FillRect( screen, NULL, brown );
+    Sprite square( red, window_width/2 + dir_x, window_height/2 + dir_y);
+    SpriteGroup active_sprites;
+    active_sprites.add( &square );
+    cap_framrate( starting_tick );
+    active_sprites.draw( screen );
+    SDL_UpdateWindowSurface( window );
+    }
+}
 
 int WinMain( int argc, char* args[] )
 {
@@ -150,50 +198,9 @@ int WinMain( int argc, char* args[] )
     	     << SDL_GetError();
     }
 
-
-    Uint32 starting_tick;
-    SDL_Event event;
-    bool running = true;
-
-    int i = 0;
-    while (running){
-
-    	starting_tick = SDL_GetTicks();
-    	while (SDL_PollEvent(&event)){
-    		switch( event.type ){
-    		case SDL_QUIT:
-    			running = false;
-    			break;
-    		case SDL_KEYDOWN:
-    			if ( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ){
-    				running = false;
-    			}
-    			break;
-    		}
-    	}
-    	i++;
-    SDL_Surface *screen = SDL_GetWindowSurface( window );
-    Uint32 brown = SDL_MapRGB( screen->format, 230, 220, 210 );
-    Uint32 red = SDL_MapRGB( screen->format, 255, 0, 0 );
-    Uint32 blue = SDL_MapRGB( screen->format, 0, 0, 255 );
-    SDL_FillRect( screen, NULL, brown );
-
-    Sprite square( red, window_width/2 , window_height/2 +i );
-    Sprite anotherSquare( blue, window_width/2 -i , window_height/2+20 );
-
-    SpriteGroup active_sprites;
-    active_sprites.add( &square );
-    active_sprites.add( &anotherSquare );
-    active_sprites.draw( screen );
-
-    SDL_UpdateWindowSurface( window );
-    	cout << "x = " << i << endl;
-    	cap_framrate( starting_tick );
-    	SDL_GetWindowPosition( window, &x , &y );
-//    	cout << x << "," << y << endl;
-    }
-
+    startGame( window );
     SDL_DestroyWindow( window );
     SDL_Quit();
     return 0;
-}
+
+    }
