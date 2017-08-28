@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
-#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -141,6 +140,7 @@ int direction( SDL_Event event ){
     		break;
     	case SDL_KEYDOWN:
     		if ( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ){
+    			break;
     		}
     		if ( event.key.keysym.scancode == SDL_SCANCODE_UP ){
     			dir = 0;
