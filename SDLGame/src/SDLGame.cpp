@@ -61,7 +61,8 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
-
+	cnt++;
+	cout << "counter = " << cnt << endl;
 }
 
 void Game::render(){

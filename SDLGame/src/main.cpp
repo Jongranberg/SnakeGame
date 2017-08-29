@@ -6,11 +6,18 @@
  */
 #include "SDLGame.hpp"
 
+#include <iostream>
+#include <SDL2/SDL.h>
+
+using namespace std;
+
 Game *game = nullptr;
 
 int WinMain() {
 
 	game = new Game();
+
+	game->init("hejdu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, true);
 
 	while(game->running()){
 		game->handleEvents();
