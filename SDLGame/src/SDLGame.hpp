@@ -28,14 +28,15 @@ private:
 	SDL_Renderer *renderer;
 };
 
-class Sprite {
-private:
-	SDL_Surface *image = NULL;
-	SDL_Rect rect;
-	int xpos, ypos;
-public:
-	Sprite(Uint32 color, int ypos, int xpos, int height, int width );
-	~Sprite();
-};
+//class Sprite {
+//private:
+//	SDL_Surface *image = NULL;
+//	SDL_Rect rect;
+//	int xpos, ypos;
+//public:
+//	Sprite(Uint32 color, int ypos, int xpos, int height, int width );
+//	~Sprite();
+//
+//};
 
 #endif /* SDLGAME_HPP_ */

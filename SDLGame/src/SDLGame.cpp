@@ -13,6 +13,16 @@
 
 using namespace std;
 
+//Sprite::Sprite(Uint32 color, int ypos, int xpos, int height, int width){
+//
+//}
+//
+//Sprite::~Sprite(){
+//
+//}
+
+SDL_Texture *playerTex;
+
 Game::Game(){
 
 }
@@ -42,9 +52,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		}
 
 		isRunning = true;
-	} else {
-		isRunning = false;
 	}
+	SDL_Surface *tmpSurface = IMG_Load("assets/player.png");
+		cout << "you managed to load it" << tmpSurface << endl;
+	playerTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+	SDL_FreeSurface(tmpSurface);
 }
 
 void Game::handleEvents(){
@@ -68,8 +80,8 @@ void Game::update(){
 
 void Game::render(){
 
+	SDL_RenderCopy(renderer, playerTex, NULL, NULL);
 	SDL_RenderClear(renderer);
-
 	SDL_RenderPresent(renderer);
 }
 
