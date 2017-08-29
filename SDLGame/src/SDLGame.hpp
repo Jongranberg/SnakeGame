@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 using namespace std;
 
 class Game {
@@ -25,6 +26,16 @@ private:
 	bool isRunning;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
+};
+
+class Sprite {
+private:
+	SDL_Surface *image = NULL;
+	SDL_Rect rect;
+	int xpos, ypos;
+public:
+	Sprite(Uint32 color, int ypos, int xpos, int height, int width );
+	~Sprite();
 };
 
 #endif /* SDLGAME_HPP_ */

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include "SDLGame.hpp"
 
 using namespace std;
@@ -68,7 +69,7 @@ void Game::update(){
 void Game::render(){
 
 	SDL_RenderClear(renderer);
-	//This is where we would add stuff to render
+
 	SDL_RenderPresent(renderer);
 }
 
