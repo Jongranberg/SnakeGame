@@ -5,11 +5,13 @@
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
 //============================================================================
-
+#include "TextureManager.hpp"
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "SDLGame.hpp"
+#include "GameObject.hpp"
+#include "Map.hpp"
 
 using namespace std;
 
@@ -21,16 +23,19 @@ using namespace std;
 //
 //}
 
-SDL_Texture *playerTex;
+GameObject* player;
+GameObject* enemy;
+Map* map;
+SDL_Renderer* SDLGame::renderer = nullptr;
 
-Game::Game(){
+SDLGame::SDLGame(){
 
 }
-Game::~Game(){
+SDLGame::~SDLGame(){
 
 }
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen){
+void SDLGame::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen){
 
 	int flags = 0;
 	if(fullscreen){
@@ -53,13 +58,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		isRunning = true;
 	}
-	SDL_Surface *tmpSurface = IMG_Load("assets/player.png");
-		cout << "you managed to load it" << tmpSurface << endl;
-	playerTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-	SDL_FreeSurface(tmpSurface);
+	player = new GameObject("C:/Users/xxgranfj/Desktop/Grunter/C++/Projects/SDLGame/assets/player.png", 0, 0);
+	enemy = new GameObject("C:/Users/xxgranfj/Desktop/Grunter/C++/Projects/SDLGame/assets/enemy.png", 50, 50);
+	map = new Map();
 }
 
-void Game::handleEvents(){
+void SDLGame::handleEvents(){
 
 	SDL_Event event;
 	SDL_PollEvent(&event);
@@ -73,19 +77,26 @@ void Game::handleEvents(){
 
 }
 
-void Game::update(){
+void SDLGame::update(){
+
 	cnt++;
-	cout << "counter = " << cnt << endl;
+	player->Update();
+	enemy->Update();
+
+
+//	cout << "counter = " << cnt << endl;
 }
 
-void Game::render(){
+void SDLGame::render(){
 
-	SDL_RenderCopy(renderer, playerTex, NULL, NULL);
 	SDL_RenderClear(renderer);
+	map->drawMap();
+	player->Render();
+	enemy->Render();
 	SDL_RenderPresent(renderer);
 }
 
-void Game::clean(){
+void SDLGame::clean(){
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
